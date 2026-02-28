@@ -24,7 +24,7 @@ class BookingTable extends BaseTable
             ->setNameTable('Bookings')
             ->setRoute('admin.bookings.index')
             ->hasFilter()
-
+            ->hasCheckbox(false)
             ->usingQuery(
                 Booking::query()
                     ->with('assignedStaff')

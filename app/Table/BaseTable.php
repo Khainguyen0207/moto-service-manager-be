@@ -60,6 +60,13 @@ abstract class BaseTable implements TableNameConfig
         return $this->hasCheckBox;
     }
 
+    public function hasCheckbox(bool $hasCheckBox = true): static
+    {
+        $this->hasCheckBox = $hasCheckBox;
+
+        return $this;
+    }
+
     public function hasBulkDelete(bool $hasBulkDelete = true): static
     {
         $this->hasBulkDelete = $hasBulkDelete;
@@ -118,7 +125,7 @@ abstract class BaseTable implements TableNameConfig
 
     public function setRoute(string $route): static
     {
-        $this->route = Str::beforeLast($route, '.').'.';
+        $this->route = Str::beforeLast($route, '.') . '.';
 
         return $this;
     }
@@ -284,7 +291,7 @@ abstract class BaseTable implements TableNameConfig
 
     public function renderTable(): View|Application|Factory|\Illuminate\View\View
     {
-        $view = 'admin.'.$this->template;
+        $view = 'admin.' . $this->template;
 
         return view($view, $this->render());
     }
@@ -352,11 +359,11 @@ abstract class BaseTable implements TableNameConfig
         }
         $query = $this->getUsingQuery();
 
-        $formatColumns = array_values(array_filter($columns, fn ($c) => $c instanceof FormatColumn));
+        $formatColumns = array_values(array_filter($columns, fn($c) => $c instanceof FormatColumn));
 
         $dataTable = DataTables::eloquent($query)
             ->filter(function ($query) use ($columnNames) {
-                $ranges = array_values(array_filter($this->getFilters(), fn ($filter) => $filter->getFilterType() === 'range'));
+                $ranges = array_values(array_filter($this->getFilters(), fn($filter) => $filter->getFilterType() === 'range'));
 
                 foreach ($columnNames as $col) {
                     $value = request()->input($col);
@@ -367,8 +374,8 @@ abstract class BaseTable implements TableNameConfig
 
                     foreach ($ranges as $range) {
                         $key = Str::beforeLast($range->getName(), '_from');
-                        $from = request()->input($key.'_from');
-                        $to = request()->input($key.'_to');
+                        $from = request()->input($key . '_from');
+                        $to = request()->input($key . '_to');
 
                         if ($from && in_array($key, $columnNames)) {
                             $query->where($key, '>=', $from);

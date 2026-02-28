@@ -24,6 +24,8 @@ class StaffReviewTable extends BaseTable
             ->setNameTable('Staff Reviews')
             ->setRoute('admin.staff-reviews.index')
             ->hasFilter()
+            ->hasCheckbox(false)
+            ->notBulkDelete()
             ->usingQuery(
                 StaffReview::query()
                     ->with(['customer', 'staff', 'bookingService'])

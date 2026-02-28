@@ -1,4 +1,8 @@
-@php use App\Enums\BaseEnum;use App\Table\Columns\FormatColumn;use Illuminate\Support\Str; @endphp
+@php
+    use App\Enums\BaseEnum;
+    use App\Table\Columns\FormatColumn;
+    use Illuminate\Support\Str;
+@endphp
 
 
 <div class="card card-datatable px-4" data-table-resource="{{ $name }}">
@@ -7,27 +11,28 @@
 
         <div class="header-action d-inline-block text-end d-flex align-items-center gap-2">
 
-            @if($table->isHasBulkDelete())
-            <button type="button" class="btn btn-outline-danger col-md-auto me-3 mb-3 d-none" id="bulk-delete-btn" data-bs-toggle="modal" data-bs-target="#bulk-confirm-modal">
-                <span class="icon-base bx bx-trash icon-sm me-2"></span>
-                <span>Xóa tất cả (<span class="bulk-count">0</span>)</span>
-            </button>
+            @if ($table->isHasBulkDelete())
+                <button type="button" class="btn btn-outline-danger col-md-auto me-3 mb-3 d-none" id="bulk-delete-btn"
+                    data-bs-toggle="modal" data-bs-target="#bulk-confirm-modal">
+                    <span class="icon-base bx bx-trash icon-sm me-2"></span>
+                    <span>Xóa tất cả (<span class="bulk-count">0</span>)</span>
+                </button>
             @endif
 
-            @if($table->hasHeaderAction())
-            @if(! empty($table->getHeaderActions()))
-            @foreach($table->getHeaderActions() as $action)
-            @include($action->getTemplate())
-            @endforeach
-            @else
-            <a href="{{ route($table->route .'create') }}" class="btn btn-outline-info col-md-auto me-3 mb-3">
-                <span class="icon-base bx bx-plus icon-sm me-2">
-                </span>
-                <span>Create</span>
-            </a>
+            @if ($table->hasHeaderAction())
+                @if (!empty($table->getHeaderActions()))
+                    @foreach ($table->getHeaderActions() as $action)
+                        @include($action->getTemplate())
+                    @endforeach
+                @else
+                    <a href="{{ route($table->route . 'create') }}" class="btn btn-outline-info col-md-auto me-3 mb-3">
+                        <span class="icon-base bx bx-plus icon-sm me-2">
+                        </span>
+                        <span>Create</span>
+                    </a>
+                @endif
             @endif
-            @endif
-            <a href="{{ route($table->route .'index') }}" class="btn btn-outline-github col-md-auto me-3 mb-3">
+            <a href="{{ route($table->route . 'index') }}" class="btn btn-outline-github col-md-auto me-3 mb-3">
                 <span class="icon-base bx bx-refresh icon-sm me-2">
                 </span>
 
@@ -36,47 +41,52 @@
         </div>
     </div>
 
-    @if($table->isHasFilter())
-    <form action="{{ route('admin.get-data', [
-            'table' => 'cc'
-        ]) }}" data-bs-toggle="form-filter" id="form-filter" method="get">
+    @if ($table->isHasFilter())
+        <form action="{{ route('admin.get-data', [
+            'table' => 'cc',
+        ]) }}"
+            data-bs-toggle="form-filter" id="form-filter" method="get">
 
-        <div class="row row-cols-md-4 row-cols-1 row-cols-sm-2 px-2">
-            @foreach($table->getFilters() as $field)
-            @include($field->getViewPath())
-            @endforeach
-        </div>
-        <button type="submit" class="btn btn-outline-primary m-2" data-ds-toggle="search-datatable">
-            <span class="me-2">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" viewBox="0 0 24 24">
-                    <path d="m20,2H4c-.55,0-1,.45-1,1v2c0,.24.09.48.25.66l6.75,7.72v7.62c0,.4.24.77.62.92.12.05.25.08.38.08.26,0,.52-.1.71-.29l2-2c.19-.19.29-.44.29-.71v-5.62l6.75-7.72c.16-.18.25-.42.25-.66v-2c0-.55-.45-1-1-1Z"></path>
-                </svg>
-            </span>
-            Filter
-        </button>
-        <button type="reset" id="btn-reset" class="btn btn-outline-info m-2" data-ds-toggle="clear-search">
-            <span class="icon-base bx bx-x icon-sm "></span>
+            <div class="row row-cols-md-4 row-cols-1 row-cols-sm-2 px-2">
+                @foreach ($table->getFilters() as $field)
+                    @include($field->getViewPath())
+                @endforeach
+            </div>
+            <button type="submit" class="btn btn-outline-primary m-2" data-ds-toggle="search-datatable">
+                <span class="me-2">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                        viewBox="0 0 24 24">
+                        <path
+                            d="m20,2H4c-.55,0-1,.45-1,1v2c0,.24.09.48.25.66l6.75,7.72v7.62c0,.4.24.77.62.92.12.05.25.08.38.08.26,0,.52-.1.71-.29l2-2c.19-.19.29-.44.29-.71v-5.62l6.75-7.72c.16-.18.25-.42.25-.66v-2c0-.55-.45-1-1-1Z">
+                        </path>
+                    </svg>
+                </span>
+                Filter
+            </button>
+            <button type="reset" id="btn-reset" class="btn btn-outline-info m-2" data-ds-toggle="clear-search">
+                <span class="icon-base bx bx-x icon-sm "></span>
 
-            <span>Clear</span>
-        </button>
-    </form>
+                <span>Clear</span>
+            </button>
+        </form>
     @endif
 
     <table class="table table-responsive" id="dataTable" data-url="{{ route('admin.get-data', $name) }}">
         <thead>
             <tr>
-                @if($table->isHasCheckBox())
-                <th data-dt="checkbox">
-                    <input class="form-check-input" type="checkbox" id="select-all-checkbox" aria-label="Select all rows">
-                </th>
+                @if ($table->isHasCheckBox())
+                    <th data-dt="checkbox">
+                        <input class="form-check-input" type="checkbox" id="select-all-checkbox"
+                            aria-label="Select all rows">
+                    </th>
                 @endif
 
-                @foreach($table->getColumns() as $column)
-                <th data-field="{{ $column->getName() }}">{!! $column->getLabel() !!}</th>
+                @foreach ($table->getColumns() as $column)
+                    <th data-field="{{ $column->getName() }}">{!! $column->getLabel() !!}</th>
                 @endforeach
 
-                @if($table->hasOperationsColumn())
-                <th data-dt="operation">Operations</th>
+                @if ($table->hasOperationsColumn())
+                    <th data-dt="operation">Operations</th>
                 @endif
             </tr>
         </thead>
@@ -89,12 +99,13 @@
         const $container = dataTable.closest('.card-datatable');
         const tableResource = $container.data('table-resource') || '';
         let cols = @json(json_decode($table->getColumnsToJson(), true));
+        const isHasCheckBox = {{ $table->isHasCheckBox() ? 1 : 0 }};
 
-        
         cols = cols.map(function(col) {
             if (col.render === '__ROW_CHECKBOX_RENDER__') {
                 col.render = function(data, type, row) {
-                    return '<input class="form-check-input row-checkbox" type="checkbox" data-row-id="' + data + '" aria-label="Select row">';
+                    return '<input class="form-check-input row-checkbox" type="checkbox" data-row-id="' +
+                        data + '" aria-label="Select row">';
                 };
             }
             return col;
@@ -106,7 +117,7 @@
             return acc;
         }, {});
 
-        
+
         let selectedIds = [];
 
         function updateBulkUI() {
@@ -123,7 +134,7 @@
                 $bulkBtn.addClass('d-none');
             }
 
-            
+
             const totalRows = $rowCheckboxes.length;
             const checkedRows = $rowCheckboxes.filter(':checked').length;
 
@@ -150,14 +161,14 @@
             updateBulkUI();
         }
 
-        
+
         $container.on('change', '#select-all-checkbox', function() {
             const isChecked = $(this).prop('checked');
             $container.find('.row-checkbox').prop('checked', isChecked);
             syncSelectedIdsFromCheckboxes();
         });
 
-        
+
         $container.on('change', '.row-checkbox', function() {
             syncSelectedIdsFromCheckboxes();
         });
@@ -166,24 +177,24 @@
             const dataUrl = dataTable.data('url')
             dataTable = dataTable.DataTable({
                 "language": {
-                    "sLengthMenu": "Show \t _MENU_entries"
-                    , info: `Showing _START_ to _END_ of _TOTAL_ ${$('.card-datatable h4').text().toLowerCase()}`
-                , }
-                , "ordering": true
-                , "order": [
-                    [1, 'desc']
-                ]
-                , lengthMenu: [10, 20, 50]
-                , serverSide: true
-                , processing: true
-                , paging: true
-                , ajax: {
-                    url: dataUrl
-                    , type: 'POST'
-                    , headers: {
+                    "sLengthMenu": "Show \t _MENU_entries",
+                    info: `Showing _START_ to _END_ of _TOTAL_ ${$('.card-datatable h4').text().toLowerCase()}`,
+                },
+                "ordering": true,
+                "order": [
+                    [isHasCheckBox ? 1 : 0, 'desc']
+                ],
+                lengthMenu: [10, 20, 50],
+                serverSide: true,
+                processing: true,
+                paging: true,
+                ajax: {
+                    url: dataUrl,
+                    type: 'POST',
+                    headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                    }
-                    , data: function(d) {
+                    },
+                    data: function(d) {
                         const $form = $('#form-filter');
                         const filtersCols = getFiltersFromForm($form, true);
                         const filtersAll = getFiltersFromForm($form, false);
@@ -192,16 +203,16 @@
 
                         d.search = d.search || {};
                         d.search.value = JSON.stringify({
-                            value: d.search.value || ''
-                            , dataSearch: filtersAll
+                            value: d.search.value || '',
+                            dataSearch: filtersAll
                         });
                         d.search.regex = false;
-                    }
-                    , dataSrc: function(json) {
+                    },
+                    dataSrc: function(json) {
                         return json.data;
                     }
-                }
-                , drawCallback: function(settings) {
+                },
+                drawCallback: function(settings) {
                     const api = new $.fn.dataTable.Api(settings);
 
                     api.rows({
@@ -213,17 +224,21 @@
 
                         Object.values($cell).forEach((r) => {
                             if ($(r).hasClass('btn')) {
-                                const dataKey = $(r).attr('data-bs-dataKey').trim() !== '' ? $(r).attr('data-bs-dataKey') : 'id';
+                                const dataKey = $(r).attr('data-bs-dataKey')
+                                    .trim() !== '' ? $(r).attr('data-bs-dataKey') :
+                                    'id';
 
                                 if ($(r).attr('href') !== '#') {
 
                                     const href = $(r).attr('href');
-                                    const result = href.substring(0, href.lastIndexOf('/0')) + "/" +
+                                    const result = href.substring(0, href
+                                            .lastIndexOf('/0')) + "/" +
                                         rowData[dataKey];
                                     $(r).attr('href', result)
                                 }
 
-                                const value = dataKey && rowData[dataKey] !== undefined ?
+                                const value = dataKey && rowData[dataKey] !==
+                                    undefined ?
                                     rowData[dataKey] :
                                     rowData.id;
 
@@ -232,15 +247,16 @@
                         })
                     });
 
-                    
+
                     selectedIds = [];
-                    $container.find('#select-all-checkbox').prop('checked', false).prop('indeterminate', false);
+                    $container.find('#select-all-checkbox').prop('checked', false).prop(
+                        'indeterminate', false);
                     updateBulkUI();
-                }
-                , columns: cols
-                , searching: false
-                , dom: '<"dt-top d-flex justify-content-start"l>rt<"dt-bottom"ip>'
-            , });
+                },
+                columns: cols,
+                searching: false,
+                dom: '<"dt-top d-flex justify-content-start"l>rt<"dt-bottom"ip>',
+            });
 
         }
 
@@ -321,13 +337,13 @@
             const token = $('input[name="_token"]').val();
 
             $.ajax({
-                url: $form.attr('action')
-                , method: 'POST'
-                , headers: {
+                url: $form.attr('action'),
+                method: 'POST',
+                headers: {
                     'X-CSRF-TOKEN': token
-                }
-                , data: $form.serialize()
-                , error: function(xhr) {
+                },
+                data: $form.serialize(),
+                error: function(xhr) {
                     clearValidationErrors($form);
 
                     if (xhr.status === 422) {
@@ -338,11 +354,11 @@
                         return;
                     }
 
-                }
-                , success: function({
-                    error
-                    , data
-                    , message
+                },
+                success: function({
+                    error,
+                    data,
+                    message
                 }) {
                     dataTable.ajax.reload();
 
@@ -353,12 +369,12 @@
 
         function clearValidationErrors($form) {
             $form.find('.is-invalid').removeClass('is-invalid');
-            $form.find('.invalid-feedback').text('').addClass('d-none'); 
+            $form.find('.invalid-feedback').text('').addClass('d-none');
         }
 
         function renderValidationErrors($form, errors) {
             Object.keys(errors).forEach(function(field) {
-                const messages = errors[field]; 
+                const messages = errors[field];
                 const message = Array.isArray(messages) ? messages[0] : messages;
 
                 const $input = $form.find(`[name="${cssEscape(field)}"]`);
@@ -405,13 +421,13 @@
             const $form = $(this).find('form');
 
             $.ajax({
-                url: $form.attr('action')
-                , method: 'POST'
-                , data: $form.serialize()
-                , success: function({
-                    error
-                    , data
-                    , message
+                url: $form.attr('action'),
+                method: 'POST',
+                data: $form.serialize(),
+                success: function({
+                    error,
+                    data,
+                    message
                 }) {
                     if (error === true) {
                         alert(message)
@@ -420,11 +436,11 @@
                     }
 
                     $('.btn-close').click();
-                }
-                , error: function(xhr) {
+                },
+                error: function(xhr) {
                     alert("Can't do");
-                }
-            , });
+                },
+            });
         });
 
         // Bulk delete modal handler
@@ -443,28 +459,27 @@
             const ids = JSON.parse(idsJson || '[]');
 
             $.ajax({
-                url: $form.attr('action')
-                , method: 'POST'
-                , headers: {
+                url: $form.attr('action'),
+                method: 'POST',
+                headers: {
                     'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
-                }
-                , contentType: 'application/json'
-                , data: JSON.stringify({
-                    ids: ids
-                    , resource: resource
-                    , _token: $('meta[name="csrf-token"]').attr('content')
-                })
-                , success: function(response) {
+                },
+                contentType: 'application/json',
+                data: JSON.stringify({
+                    ids: ids,
+                    resource: resource,
+                    _token: $('meta[name="csrf-token"]').attr('content')
+                }),
+                success: function(response) {
                     dataTable.ajax.reload();
                     selectedIds = [];
                     updateBulkUI();
                     $('.btn-close').click();
-                }
-                , error: function(xhr) {
+                },
+                error: function(xhr) {
                     alert("Can't do");
-                }
-            , });   
+                },
+            });
         });
     })
-
 </script>

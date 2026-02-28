@@ -105,8 +105,13 @@
 
                             <div class="card-body">
                                 <p class="mb-1">
-                                    <strong>Booking ID:</strong>
-                                    {{ $bookingService->booking_id }}
+                                    <strong>Booking Code:</strong>
+                                    {{ $bookingService->booking->booking_code }}
+                                </p>
+
+                                <p class="mb-1">
+                                    <strong>Booking Service ID:</strong>
+                                    {{ $bookingService->getKey() }}
                                 </p>
 
                                 <p class="mb-1">

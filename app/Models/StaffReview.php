@@ -35,4 +35,18 @@ class StaffReview extends Model
     {
         return $this->belongsTo(BookingService::class);
     }
+
+    protected static function booted()
+    {
+        static::created(function ($review) {
+            $review->updateStaffRating();
+        });
+    }
+
+    public function updateStaffRating()
+    {
+        $staff = $this->staff;
+        $staff->rate = $staff->staffReviews()->avg('rating');
+        $staff->save();
+    }
 }

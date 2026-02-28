@@ -91,6 +91,7 @@ class StaffForm extends BaseForm
                 SelectField::class,
                 SelectField::make('is_active')
                     ->setLabel('Is Active')
+                    ->helperText('If inactive, max staff active will be decreased!')
                     ->setOptions([
                         '0' => 'Inactive',
                         '1' => 'Active',
@@ -134,7 +135,7 @@ class StaffForm extends BaseForm
                 'note',
                 EditorField::class,
                 EditorField::make('note')
-                ->setType('textarea')
+                    ->setType('textarea')
                     ->setLabel('Note')
             )
             ->add(

@@ -24,7 +24,7 @@ class SettingPanel extends AbstractPanelSection
                 BasePanel::make('work_time')
                     ->setName('Active Staff')
                     ->setDescription('Set the number of employees working simultaneously.')
-                    ->setUrl(route('admin.settings.active-staff')),
+                    ->setUrl(route('admin.settings.active-staff.index')),
 
                 BasePanel::make('sea_pay_setting')
                     ->setName('SePay')

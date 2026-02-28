@@ -6,7 +6,8 @@ use App\Forms\Fields\BaseField;
 use Illuminate\Contracts\View\Factory;
 use Illuminate\Contracts\View\View;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Route;
+use Illuminate\Routing\Route;
+use Illuminate\Support\Facades\Route as FacadesRoute;
 
 abstract class BaseForm
 {
@@ -24,6 +25,8 @@ abstract class BaseForm
 
     private string $class = 'form-control';
 
+    private Route $route;
+
     public static function __callStatic($method, $arguments)
     {
         $instance = static::make();
@@ -35,6 +38,7 @@ abstract class BaseForm
     {
         $this->view = 'admin.components.forms.base-form';
         $this->template = 'admin.components.forms.base';
+        $this->route = FacadesRoute::getCurrentRoute();
 
         return $this;
     }
@@ -79,9 +83,16 @@ abstract class BaseForm
         return null;
     }
 
-    public function getRoute(): \Illuminate\Routing\Route
+    public function setRoute(Route $route): static
     {
-        return Route::getCurrentRoute();
+        $this->route = $route;
+
+        return $this;
+    }
+
+    public function getRoute(): Route|null
+    {
+        return $this->route;
     }
 
     public function hasFile(bool $hasFile = false): static
@@ -143,9 +154,9 @@ abstract class BaseForm
         return $this->view;
     }
 
-    public function model(string $model): static
+    public function model(string $model, ?Model $hasModel = null): static
     {
-        $this->model = new $model;
+        $this->model = $hasModel ?? new $model;
 
         return $this;
     }

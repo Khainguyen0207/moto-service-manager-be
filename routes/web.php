@@ -48,8 +48,12 @@ Route::group([
     ], function () {
         Route::get('/', 'SettingController@index')->name('index');
         Route::post('/', 'SettingController@update')->name('store');
+
         Route::get('/sepay', 'SettingController@sePay')->name('sepay');
-        Route::get('/max-active-staff', 'SettingController@activeStaff')->name('active-staff');
+        Route::get('/max-active-staff', 'StaffSettingController@activeStaff')
+            ->name('active-staff.index');
+        Route::put('/max-active-staff', 'StaffSettingController@updateActiveStaff')
+            ->name('active-staff.update');
         Route::get('/work-time', 'SettingController@workTime')->name('work-time');
         Route::get('/information-system', 'SettingController@informationSystem')->name('information-system');
         Route::get('/telegram', 'SettingController@telegram')->name('telegram');

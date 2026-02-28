@@ -62,6 +62,12 @@
                 </option>
             @endforeach
         </select>
+
+        @if ($helper = $field->getAttribute('helper_text'))
+            <div id="{{ $field->getName() . '_helper_text' }}" class="form-text">
+                {!! $helper !!}
+            </div>
+        @endif
     </div>
 
     @if (count($errors) === 0 || !$errors->get($name))

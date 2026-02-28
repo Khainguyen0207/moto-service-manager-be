@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use App\Enums\StaffLevelEnum;
+use App\Facades\SettingHelper;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
@@ -52,5 +53,22 @@ class Staff extends Model
     public function services(): BelongsToMany
     {
         return $this->belongsToMany(Service::class, 'staff_services')->withTimestamps();
+    }
+
+    protected static function booted()
+    {
+        static::updated(function ($staff) {
+            if ($staff->wasChanged('is_active')) {
+                $countActiveStaff = Staff::query()
+                    ->where('is_active', true)
+                    ->count();
+
+                $staffCurrentActive = SettingHelper::get('max_active_staff');
+
+                if ($countActiveStaff < $staffCurrentActive) {
+                    SettingHelper::set('max_active_staff', $countActiveStaff);
+                }
+            }
+        });
     }
 }

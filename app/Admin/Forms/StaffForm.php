@@ -91,7 +91,7 @@ class StaffForm extends BaseForm
                 SelectField::class,
                 SelectField::make('is_active')
                     ->setLabel('Is Active')
-                    ->helperText('If inactive, max staff active will be decreased!')
+                    ->helperText(sprintf('If inactive, max staff active will be decreased! <br> Setup max active staff in <a href="%s">here</a>', route('admin.settings.active-staff.index')))
                     ->setOptions([
                         '0' => 'Inactive',
                         '1' => 'Active',

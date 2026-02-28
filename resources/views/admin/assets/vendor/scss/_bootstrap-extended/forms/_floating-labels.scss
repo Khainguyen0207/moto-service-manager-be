@@ -1,0 +1,12 @@
+
+
+
+
+.form-floating {
+  > .form-control:focus,
+  > .form-control:not(:placeholder-shown) {
+    &::placeholder {
+      color: $input-placeholder-color;
+    }
+  }
+}

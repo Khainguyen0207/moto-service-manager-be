@@ -1,0 +1,150 @@
+@use "sass:math" as *;
+
+@function slice-list($list, $start: 1, $end: length($list)) {
+  $result: null;
+
+  @if type-of($start) !=number or type-of($end) !=number {
+    @warn "Either $start or $end are not a number for `slice`.";
+  }
+
+  @else if $start >$end {
+    @warn "The start index has to be lesser than or equals to the end index for `slice`.";
+  }
+
+  @else if $start < 1 or $end < 1 {
+    @warn "List indexes must be non-zero integers for `slice`.";
+  }
+
+  @else if $start >length($list) {
+    @warn "List index is #{$start} but list is only #{length($list)} item long for `slice`.";
+  }
+
+  @else if $end >length($list) {
+    @warn "List index is #{$end} but list is only #{length($list)} item long for `slice`.";
+  }
+
+  @else {
+    $result: (
+    );
+
+  @for $i from $start through $end {
+    $result: append($result, nth($list, $i));
+  }
+}
+
+@return $result;
+}
+
+
+
+
+
+@function strip-unit($number) {
+  @if type-of($number)=='number' and not unitless($number) {
+    @return div($number, ($number * 0 + 1));
+  }
+
+  @return $number;
+}
+
+
+@function px-to-rem($value) {
+
+  @return (div(strip-unit($value), 16)) * 1rem;
+}
+
+
+@function rem-to-px($value) {
+
+  @return (strip-unit($value) * 16) * 1px;
+}
+
+
+
+
+
+
+@function tint-color($color, $weight, $background: null) {
+  $background: if($background, $background, white);
+  @return mix($background, $color, $weight);
+}
+
+
+@function shade-color($color, $weight, $background: null) {
+  $background: if($background, $background, black);
+  @return mix($background, $color, $weight);
+}
+
+
+@function shift-color($color, $weight, $background: null) {
+  @return if($weight > 0, shade-color($color, $weight, $background), tint-color($color, -$weight));
+}
+
+
+@function rgba-to-hex($color, $background: #fff) {
+  @if $color and alpha($color) !=1 {
+    $percent: alpha($color) * 100%;
+    $opaque: opacify($color, 1);
+
+    @return mix($opaque, $background, $percent);
+  }
+
+  @else {
+    @return $color;
+  }
+}
+
+
+@function contrast-value($color) {
+  @if $color ==transparent {
+    @return $body-color;
+  }
+
+  @else if alpha($color) !=1 {
+    $color: rgba-to-hex($color);
+  }
+
+  $r: red($color);
+  $g: green($color);
+  $b: blue($color);
+
+  @return divide((($r * 299) + ($g * 587) + ($b * 114)), 1000);
+}
+
+
+
+
+
+@function get-navbar-prop($bg, $active-color: null, $inactive-color: null, $border: null) {
+  $bg: rgba-to-hex($bg);
+
+  $active-color: rgba-to-hex($active-color);
+  $active-color: if($active-color, $active-color, color-contrast($bg));
+
+  $contrast-percent: divide(contrast-value($bg), 255);
+  $contrast-percent-inverted: 1 - $contrast-percent;
+
+  $opacity: if($active-color ==#fff, 0.6 + (0.4 * $contrast-percent), 0.6 + (0.4 * (1 - $contrast-percent)));
+
+  $color: if($inactive-color,
+      rgba-to-hex($inactive-color, $bg),
+      rgba-to-hex(rgba($active-color, if($contrast-percent < 0.25, $opacity + 0.2, $opacity)), $bg));
+  $disabled-color: rgba-to-hex(rgba($color, 0.6), $bg);
+  $muted-color: rgba-to-hex(rgba($color, 0.75), $bg);
+  $border: if($border,
+      $border,
+      if($contrast-percent > 0.75,
+        rgba($active-color, divide($opacity, 8)),
+        if($contrast-percent < 0.25, rgba($active-color, 0.06), rgba($active-color, 0.15))));
+
+  @return (opacity: $opacity,
+    contrast-percent: $contrast-percent,
+    contrast-percent-inverted: $contrast-percent-inverted,
+
+    bg: $bg,
+    color: $color,
+    active-color: $active-color,
+    disabled-color: $disabled-color,
+    muted-color: $muted-color,
+    border: $border );
+}

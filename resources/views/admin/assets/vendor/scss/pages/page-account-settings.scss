@@ -1,0 +1,13 @@
+
+
+
+@use '../_custom-variables/pages' as *;
+@use '../_bootstrap-extended/include' as *;
+
+.api-key-actions {
+  position: absolute !important;
+  top: 0.75rem;
+  @include app-ltr() {
+    right: 0.5rem;
+  }
+}

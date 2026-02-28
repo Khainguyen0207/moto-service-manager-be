@@ -1,0 +1,144 @@
+
+
+
+@each $color, $value in $table-variants {
+  @if $color != primary {
+    @include template-table-variant($color, $value);
+  }
+}
+
+
+.table {
+  > :not(caption) > * > * {
+    background-clip: padding-box;
+  }
+  &:not(.table-borderless):not(.table-dark) > :not(caption) > *:not(.table-dark) > * {
+    border-top-width: 1px;
+  }
+  .dropdown-item {
+    display: flex;
+    gap: 0.25rem;
+  }
+  tr {
+    > td {
+      .dropdown {
+        position: static;
+      }
+    }
+  }
+  caption {
+    padding: $table-cell-padding-y $table-cell-padding-x;
+  }
+  thead tr th {
+    padding-block: $table-head-padding-y;
+  }
+  &.table-borderless:not(.table-sm) {
+    > :not(thead) > * > * {
+      padding-block: $table-cell-padding-y + 0.0313rem;
+    }
+    > thead > * > * {
+      padding-block: $table-head-padding-y + 0.0313rem;
+    }
+  }
+}
+
+
+.card {
+  .table {
+    margin-bottom: 0;
+  }
+}
+@supports (-moz-appearance: none) {
+  .table {
+    .dropdown-menu.show {
+      display: inline-table;
+    }
+  }
+}
+
+.table th {
+  text-transform: uppercase;
+  font-size: $font-size-sm;
+  letter-spacing: 0.2px;
+  color: $table-th-color;
+}
+.table-dark th {
+  color: var(--#{$prefix}table-color);
+  border-top: 1px solid $table-border-color;
+}
+
+.table-border-bottom-0 {
+  tr:last-child {
+    td,
+    th {
+      border-bottom-width: 0;
+    }
+  }
+}
+
+
+.table.table-dark .btn.btn-icon {
+  color: $table-border-color;
+}
+
+
+.table-border-bottom-0 {
+  tr:last-child {
+    td,
+    th {
+      border-bottom-width: 0;
+    }
+  }
+}
+
+.table-border-top-0 {
+  tr:first-child {
+    td,
+    th {
+      border-top-width: 0 !important;
+    }
+  }
+}
+
+
+
+
+
+
+
+.table.table-dark {
+  .btn {
+    i {
+      color: $card-bg;
+    }
+  }
+}
+
+
+.table.table-flush-spacing {
+  thead,
+  tbody {
+    tr > td:first-child {
+      padding-left: 0;
+    }
+    tr > td:last-child {
+      padding-right: 0;
+    }
+  }
+}
+
+
+
+
+
+.nav-align-top,
+.nav-align-right,
+.nav-align-bottom,
+.nav-align-left {
+  .table:not(.table-dark),
+  .table:not(.table-dark) thead:not(.table-dark) th,
+  .table:not(.table-dark) tfoot:not(.table-dark) th,
+  .table:not(.table-dark) td {
+    border-color: $border-color;
+  }
+}

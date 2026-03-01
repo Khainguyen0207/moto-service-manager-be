@@ -20,7 +20,7 @@ class UserSeeder extends Seeder
             [
                 [
                     'id' => 1,
-                    'email' => 'admin@rivercrane.vn',
+                    'email' => 'admin@admin.vn',
                     'password' => Hash::make('123456'),
                     'group_role' => UserGroupRoleEnum::ADMIN,
                     'created_at' => $now->copy()->subMonths(6),

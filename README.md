@@ -149,4 +149,4 @@ Nếu bạn muốn sử dụng Bot và Group Telegram của riêng mình:
 
 | Email                  | Password |
 |------------------------|----------|
-| admin@rivercrane.vn    | 123456   |
+| admin@admin.vn    | 123456   |

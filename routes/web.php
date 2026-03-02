@@ -6,8 +6,8 @@ Route::group([
     'prefix' => 'admin',
     'as' => 'admin.',
     'namespace' => 'App\Http\Controllers\Admin',
-    'middleware' => ['auth'],
-], function () {
+    'middleware' => ['auth', 'ip.manager'],
+], function () {    
     Route::get('/', fn() => redirect()->route('admin.dashboard.index'));
 
     Route::resource('dashboard', 'DashboardController');

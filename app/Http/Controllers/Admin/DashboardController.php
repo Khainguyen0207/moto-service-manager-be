@@ -8,8 +8,10 @@ use App\Enums\TransactionStatusEnum;
 use App\Http\Controllers\Controller;
 use App\Models\Booking;
 use App\Models\BookingService;
+use App\Models\IpLog;
 use App\Models\Transaction;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\DB;
 
 class DashboardController extends Controller
 {
@@ -31,6 +33,7 @@ class DashboardController extends Controller
         $topCategories = $this->getTopCategories($weekStart, $weekEnd);
         $recentActivities = $this->getRecentActivities();
         $paymentStats = $this->getPaymentStats($weekStart, $weekEnd);
+        $topCountries = $this->getTopCountries();
 
         return view('admin.pages.dashboard.index', compact(
             'kpis',
@@ -39,6 +42,7 @@ class DashboardController extends Controller
             'topCategories',
             'recentActivities',
             'paymentStats',
+            'topCountries',
             'weekStart',
             'weekEnd'
         ));
@@ -67,7 +71,7 @@ class DashboardController extends Controller
 
     private function buildKpis(Carbon $weekStart, Carbon $weekEnd, Carbon $lastWeekStart, Carbon $lastWeekEnd): array
     {
-        
+
         $pendingBookings = Booking::where('status', BookingStatusEnum::PENDING)
             ->whereBetween('scheduled_start', [$weekStart, $weekEnd])
             ->count();
@@ -84,7 +88,7 @@ class DashboardController extends Controller
             ->whereBetween('scheduled_start', [$weekStart, $weekEnd])
             ->sum('total_price');
 
-        
+
         $pendingBookingsLastWeek = Booking::whereNotIn('status', [BookingStatusEnum::PENDING, BookingStatusEnum::CANCELLED])
             ->whereBetween('scheduled_start', [$lastWeekStart, $lastWeekEnd])
             ->count();
@@ -233,7 +237,7 @@ class DashboardController extends Controller
             ->whereBetween('scheduled_start', [$start, $end])
             ->sum('total_price');
 
-        $transactions = Transaction::select('provider_code', \Illuminate\Support\Facades\DB::raw('count(*) as total'))
+        $transactions = Transaction::select('provider_code', DB::raw('count(*) as total'))
             ->where('status', TransactionStatusEnum::COMPLETED)
             ->whereBetween('created_at', [$start, $end])
             ->groupBy('provider_code')
@@ -276,5 +280,29 @@ class DashboardController extends Controller
             'series' => $series,
             'icons' => $icons,
         ];
+    }
+
+    private function getTopCountries(): array
+    {
+        $total = IpLog::count();
+
+        if ($total === 0) {
+            return [];
+        }
+
+        return IpLog::select('iso_code', 'country', DB::raw('COUNT(*) as count'))
+            ->groupBy('iso_code', 'country')
+            ->orderByDesc('count')
+            ->limit(5)
+            ->get()
+            ->map(function ($item) use ($total) {
+                return [
+                    'iso_code' => strtolower($item->iso_code),
+                    'country' => $item->country,
+                    'count' => $item->count,
+                    'percentage' => round(($item->count / $total) * 100, 2),
+                ];
+            })
+            ->toArray();
     }
 }

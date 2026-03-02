@@ -25,6 +25,11 @@
                             data-bs-target="#navs-pills-top-categories" aria-controls="navs-pills-top-categories"
                             aria-selected="false">Top Categories</button>
                     </li>
+                    <li class="nav-item" role="presentation">
+                        <button type="button" class="nav-link" role="tab" data-bs-toggle="tab"
+                            data-bs-target="#navs-pills-top-countries" aria-controls="navs-pills-top-countries"
+                            aria-selected="false">Top Countries</button>
+                    </li>
                 </ul>
             </div>
 
@@ -128,6 +133,57 @@
                                                         aria-valuemax="100"></div>
                                                 </div>
                                                 <small class="fw-medium">{{ number_format($percentage, 2) }}%</small>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                @empty
+                                    <tr>
+                                        <td colspan="4" class="text-center text-muted">No data available</td>
+                                    </tr>
+                                @endforelse
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+                <div class="tab-pane fade" id="navs-pills-top-countries" role="tabpanel">
+                    <div class="table-responsive text-start text-nowrap">
+                        <table class="table table-borderless">
+                            <thead>
+                                <tr>
+                                    <th>No</th>
+                                    <th>Country</th>
+                                    <th>Visits</th>
+                                    <th class="w-25">Data In Percentage</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @forelse($topCountries as $index => $country)
+                                    @php
+                                        $colors = ['success', 'primary', 'info', 'warning', 'danger'];
+                                        $color = $colors[$index % count($colors)];
+                                    @endphp
+                                    <tr>
+                                        <td>{{ $index + 1 }}</td>
+                                        <td>
+                                            <div class="d-flex align-items-center">
+                                                <img src="https://flagcdn.com/24x18/{{ $country['iso_code'] }}.png"
+                                                    srcset="https://flagcdn.com/48x36/{{ $country['iso_code'] }}.png 2x"
+                                                    width="24" height="18" alt="{{ $country['country'] }}"
+                                                    class="me-2 rounded-1" style="object-fit: cover;">
+                                                <span class="text-heading">{{ $country['country'] }}</span>
+                                            </div>
+                                        </td>
+                                        <td class="text-heading">{{ $country['count'] }}</td>
+                                        <td>
+                                            <div class="d-flex justify-content-between align-items-center gap-4">
+                                                <div class="progress w-100" style="height:10px;">
+                                                    <div class="progress-bar bg-{{ $color }}"
+                                                        role="progressbar"
+                                                        style="width: {{ $country['percentage'] }}%"
+                                                        aria-valuenow="{{ $country['percentage'] }}"
+                                                        aria-valuemin="0" aria-valuemax="100"></div>
+                                                </div>
+                                                <small class="fw-medium">{{ $country['percentage'] }}%</small>
                                             </div>
                                         </td>
                                     </tr>

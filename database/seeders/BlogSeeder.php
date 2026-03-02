@@ -8,13 +8,27 @@ use App\Models\Post;
 use App\Models\PostView;
 use App\Models\Tag;
 use Illuminate\Database\Seeder;
+use Illuminate\Http\File;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 class BlogSeeder extends Seeder
 {
     public function run(): void
     {
+        $this->command->info('Seeding blog...');
+
+        $default = asset('assets/img/blog/default.png');
+
+        $faq = asset('assets/img/blog/faq.png');
+
+        $membership = asset('assets/img/blog/membership.png');
+
+        Storage::disk('public')->put('blog/default.png', file_get_contents($default));
+        Storage::disk('public')->put('blog/faq.png', file_get_contents($faq));
+        Storage::disk('public')->put('blog/membership.png', file_get_contents($membership));
+
         DB::statement('SET FOREIGN_KEY_CHECKS=0');
 
         Comment::truncate();
@@ -62,6 +76,18 @@ class BlogSeeder extends Seeder
         }
 
         return DB::table('blog_categories')->pluck('category_id')->all();
+    }
+
+    function imagePost($name)
+    {
+        switch ($name) {
+            case 'Membership':
+                return 'blog/membership.png';
+            case 'Hướng dẫn':
+                return 'blog/faq.png';
+            default:
+                return 'blog/default.png';
+        }
     }
 
     private function seedTags(): void
@@ -129,7 +155,7 @@ class BlogSeeder extends Seeder
                 'user_id' => ! empty($userIds) ? $userIds[array_rand($userIds)] : null,
                 'title' => $title,
                 'slug' => $slug,
-                'image' => 'example.png',
+                'image' => $this->imagePost($baseTitle),
                 'body' => $this->fakeBodyHtml($baseTitle),
                 'status' => (rand(1, 100) <= 85) ? 'published' : 'draft',
                 'created_at' => $createdAt,
@@ -165,7 +191,7 @@ class BlogSeeder extends Seeder
             'user_id' => ! empty($userIds) ? $userIds[array_rand($userIds)] : null,
             'title' => $membershipTitle,
             'slug' => $membershipSlug,
-            'image' => 'membership_program.png',
+            'image' => $this->imagePost('Membership'),
             'body' => $this->membershipProgramBodyHtml(),
             'status' => 'published',
             'created_at' => now(),

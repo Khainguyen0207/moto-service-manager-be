@@ -1,15 +1,15 @@
 <?php
 
 use App\Http\Controllers\API\GoogleAuthController;
+use App\Http\Middleware\IpManagerMiddleware;
 use App\Http\Middleware\VerifyWebMiddleware;
 use Illuminate\Support\Facades\Route;
 
 Route::group([
     'prefix' => 'v1',
     'namespace' => 'App\Http\Controllers\API',
-    'middleware' => [VerifyWebMiddleware::class, 'api'],
+    'middleware' => [VerifyWebMiddleware::class, 'api', IpManagerMiddleware::class],
 ], function () {
-
     Route::group([
         'prefix' => 'auth',
         'middleware' => ['throttle:api-auth']

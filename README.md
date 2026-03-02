@@ -1,6 +1,7 @@
 # Motorbike Service Manager (Backend)
 
 Hệ thống đặt lịch sửa chữa xe máy (Backend API & Admin Panel).
+Xem chi tiết về hệ thống: [[./PRO](https://github.com/Khainguyen0207/moto-service-manager-be/edit/main/README.md)](https://github.com/Khainguyen0207/moto-service-manager-be/blob/main/PROJECT_OVERVIEW.md)
 
 ## Yêu cầu
 

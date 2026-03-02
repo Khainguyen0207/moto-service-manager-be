@@ -25,6 +25,7 @@ class TransactionTable extends BaseTable
             ->setRoute('admin.transactions.index')
             ->hasFilter()
             ->notBulkDelete()
+            ->hasCheckbox(false)
             ->usingQuery(Transaction::query()->with('paymentSetting'))
             ->notHeaderAction()
             ->addColumns([
@@ -35,7 +36,7 @@ class TransactionTable extends BaseTable
                     ->getValueUsing(function (FormatColumn $column) {
                         $item = $column->getItem();
 
-                        return number_format($item->amount).' '.$item->currency;
+                        return number_format($item->amount) . ' ' . $item->currency;
                     }),
                 FormatColumn::make('status')
                     ->setLabel('Status')

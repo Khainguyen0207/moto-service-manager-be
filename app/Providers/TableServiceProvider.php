@@ -13,8 +13,8 @@ class TableServiceProvider extends ServiceProvider
 {
     public function register(): void
     {
-        $this->app->singleton(TableConfig::class, fn () => new TableConfig);
-        $this->app->singleton(TableFactory::class, fn ($app) => new TableFactory($app->make(TableConfig::class)));
+        $this->app->singleton(TableConfig::class, fn() => new TableConfig);
+        $this->app->singleton(TableFactory::class, fn($app) => new TableFactory($app->make(TableConfig::class)));
     }
 
     public function boot(): void
@@ -52,7 +52,7 @@ class TableServiceProvider extends ServiceProvider
         $map = [];
 
         foreach ($finder as $file) {
-            $class = 'App\\Admin\\Tables\\'.$file->getBasename('.php');
+            $class = 'App\\Admin\\Tables\\' . $file->getBasename('.php');
 
             if (! class_exists($class)) {
                 continue;
@@ -101,8 +101,8 @@ class TableServiceProvider extends ServiceProvider
 
         foreach ($finder as $file) {
 
-            $rel = str_replace($dir.DIRECTORY_SEPARATOR, '', $file->getRealPath());
-            $parts[] = $rel.'|'.$file->getMTime();
+            $rel = str_replace($dir . DIRECTORY_SEPARATOR, '', $file->getRealPath());
+            $parts[] = $rel . '|' . $file->getMTime();
         }
 
         sort($parts);
@@ -112,7 +112,7 @@ class TableServiceProvider extends ServiceProvider
 
     private function writePhpArrayFile(string $path, array $data): void
     {
-        $content = "<?php\n\nreturn ".var_export($data, true).";\n";
+        $content = "<?php\n\nreturn " . var_export($data, true) . ";\n";
         @file_put_contents($path, $content, LOCK_EX);
     }
 }

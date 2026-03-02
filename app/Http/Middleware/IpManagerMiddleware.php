@@ -5,6 +5,7 @@ namespace App\Http\Middleware;
 use App\Models\IpLog;
 use Closure;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Symfony\Component\HttpFoundation\Response;
 
 class IpManagerMiddleware
@@ -15,7 +16,13 @@ class IpManagerMiddleware
 
         $location = geoip($ip);
 
+        Log::info('IpManagerMiddleware', [
+            'ip' => $ip,
+            'location' => $location,
+        ]);
+
         if (!$location->default && !$location->cached) {
+
             IpLog::updateOrCreate([
                 'ip' => $ip,
             ], [
